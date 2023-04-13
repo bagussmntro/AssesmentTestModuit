@@ -1,0 +1,310 @@
+{
+	"info": {
+		"_postman_id": "16e3519e-87eb-4ad5-b608-47f3dabfe253",
+		"name": "ModuitAssesmentTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomString = Math.random().toString(36).substring(2, 20);\r",
+							"const name = \"user\" + randomString;\r",
+							"pm.environment.set(\"randomName\", name);"
+						],
+						"type": "text/javascript",
+						"id": "9ce49ca9-c255-4b6b-a20f-63e74bc68365"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 60000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(60000);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"userId\", jsonData.id);\r",
+							"\r",
+							"pm.test(\"Verify User Data\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.job).to.eql(\"QA Engineer\");\r",
+							"    pm.expect(jsonData.job).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.id).to.be.a(\"string\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"id": "6ffaa602-a9b1-45d8-87ce-f91476280f96"
+					}
+				}
+			],
+			"_postman_id": "61333712-4d13-4f5a-84e0-a6d3d42d3a5f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{randomName}}\",\r\n    \"job\": \"QA Engineer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/api/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomString = Math.random().toString(36).substring(2, 20);\r",
+							"const name = \"userUpdate\" + randomString;\r",
+							"pm.environment.set(\"updateRandomName\", name);"
+						],
+						"type": "text/javascript",
+						"id": "5127dabc-c47b-468e-8272-ccda12de120a"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 60000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(60000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify User Data\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.job).to.eql(\"QA Engineer\");\r",
+							"    pm.expect(jsonData.job).to.be.a(\"string\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"id": "e7eea8e8-db50-4d55-bb5c-f0bd7361a6ac"
+					}
+				}
+			],
+			"_postman_id": "2f067e3d-dcc4-451d-9ba2-0e41b988e414",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{updateRandomName}}\",\r\n    \"job\": \"QA Engineer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/api/users/{{userId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 60000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(60000);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"id": "429f03ac-8eec-49e5-b084-4f465e6cd4c1"
+					}
+				}
+			],
+			"_postman_id": "3b8dfd09-bbe8-4c74-84ab-02a007da7c07",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": "{{url}}/api/users/{{userId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "List Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 60000ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(60000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify User Data\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.page).to.eql(1);\r",
+							"    pm.expect(jsonData.per_page).to.eql(6);\r",
+							"    pm.expect(jsonData.total).to.eql(12);\r",
+							"    pm.expect(jsonData.total_pages).to.eql(2);\r",
+							"    pm.expect(jsonData.data[0].id).to.be.a(\"number\");\r",
+							"    pm.expect(jsonData.data[0].email).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data[0].first_name).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data[0].last_name).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data[0].avatar).to.be.a(\"string\");\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"id": "03a3e100-ce99-415e-bdae-d067010eb3de"
+					}
+				}
+			],
+			"_postman_id": "be98b953-d85f-4380-838a-d464da035d50",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/users?page=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "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"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "25416831-c1e6-49bb-8838-87e0fe24aa68",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4414f1c5-e98d-4aec-b3e9-094e75929420",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
